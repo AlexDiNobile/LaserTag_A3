@@ -19,6 +19,12 @@ app.get( '/3D', function( req, res ){
     res.sendFile( __dirname + '/public/3D.html' );
 });
 
+AFRAME.registerComponent('playerPos', {
+    tick: function () {
+        console.log("tick");
+    }
+});
+
 //socket.io stuff
 //https://socket.io/docs/v3/emit-cheatsheet/
 io.on('connection', (socket) => {

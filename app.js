@@ -19,12 +19,6 @@ app.get( '/3D', function( req, res ){
     res.sendFile( __dirname + '/public/3D.html' );
 });
 
-AFRAME.registerComponent('playerPos', {
-    tick: function () {
-        console.log("tick");
-    }
-});
-
 //socket.io stuff
 //https://socket.io/docs/v3/emit-cheatsheet/
 io.on('connection', (socket) => {
@@ -43,6 +37,11 @@ io.on('connection', (socket) => {
     socket.on("blue", (data) => {
         console.log( "blue event received" );
         io.emit("color_change", {r:0, g:0, b:255});
+    });
+
+    socket.on("playerPos", (data) => {
+        console.log( "playerPos received" );
+        io.emit("player_Position");
     });
 
     //question 1: how do you continuously update the network, e.g., users position and orientation?

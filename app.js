@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
 
     socket.on("playerPos", (data) => {
         console.log( "playerPos received" );
-        io.emit("player_Position");
+        io.emit("player_PosRot");
     });
 
     //question 1: how do you continuously update the network, e.g., users position and orientation?

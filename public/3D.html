@@ -4,13 +4,7 @@
         <title>user click Test</title>
         <meta charset="utf-8" />
         <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-        <script>
-            AFRAME.registerComponent('playerPos', {
-                tick: function () {
-                console.log("tick");
-                }
-            });
-        </script>
+        <script></script>
     </head>
 
     <body>
@@ -24,7 +18,10 @@
                             geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
                             material="color: white; shader: flat"></a-entity>
             </a-entity>
-            <a-entity id="bodyHitBox" position="0 1.6 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"></a-entity>
+            <a-entity id="bodyHitBox" position="0 1.7 0">
+                <a-entity geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"></a-entity>
+                <a-entity position="0 -0.8 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"></a-entity>
+            </a-entity>
 
             <a-entity class="ground"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
 
@@ -67,23 +64,39 @@
                         socket.emit('playerPos');
                 });
 
-                
-
             });
 
-            socket.on('player_Position', (data) => {
-                console.log( "Here");
+            AFRAME.registerComponent('playerPos', {
+                tick: function () {
+                console.log("tick");
+                }
+            });
+
+
+            socket.on('player_PosRot', (data) => {
                 let xPos = document.querySelector("#player").getAttribute('position').x;
-                console.log( "xPos: " + xPos);
+                //console.log( "xPos: " + xPos);
                 let yPos = document.querySelector("#player").getAttribute('position').y;
-                console.log( "yPos: " + yPos);
+                //console.log( "yPos: " + yPos);
                 let zPos = document.querySelector("#player").getAttribute('position').z;
-                console.log( "zPos: " + zPos);
-                let playerPosition = 'position="' + xPos + ' ' + yPos + ' ' + zPos + '"';
+                //console.log( "zPos: " + zPos);
+                let playerPosition = xPos + ' ' + yPos + ' ' + zPos;
+
+                let xRot = document.querySelector("#player").getAttribute('rotation').x;
+                //console.log( "xRot: " + xPos);
+                let yRot = document.querySelector("#player").getAttribute('rotation').y;
+                //console.log( "yRot: " + yPos);
+                let zRot = document.querySelector("#player").getAttribute('rotation').z;
+                //console.log( "zRot: " + zPos);
+                let playerRotation = xRot + ' ' + yRot + ' ' + zRot;
+
                 console.log(playerPosition);
 
                 //document.body.style.backgroundColor = colorStr;
                 document.querySelector('#bodyHitBox').setAttribute('position', playerPosition);
+                document.querySelector('#bodyHitBox').setAttribute('rotation', playerRotation);
+
+                console.log(playerRotation);
             });
 
             //listen to event from server

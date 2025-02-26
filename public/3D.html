@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>user click Test</title>
+        <title>LAZER TAG</title>
         <meta charset="utf-8" />
         <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
         <script https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
@@ -50,9 +50,13 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const socket = io();
+            let playerNum = 0;
 
             socket.on('connect', (userData) => {
                 console.log('I exist!');
+                console.log(socket.id);
+                playerNum++;
+                console.log(playerNum);
 
                 //put code here so that we know that socket.io has initailized ...
                 document.querySelector('#red_button').querySelector('.button').addEventListener('click', function(){
@@ -90,13 +94,9 @@
                 //console.log( "zRot: " + zPos);
                 let playerRotation = xRot + ' ' + yRot + ' ' + zRot;
 
-                console.log(playerPosition);
-
                 //document.body.style.backgroundColor = colorStr;
                 document.querySelector('#bodyHitBox').setAttribute('position', playerPosition);
                 document.querySelector('#bodyHitBox').setAttribute('rotation', playerRotation);
-
-                console.log(playerRotation);
             });
 
             //listen to event from server

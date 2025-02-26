@@ -11,17 +11,29 @@
         <!-- our buttond to tell others -->
         <!-- <button id="red" style="background-color:rgb(255, 0, 0); color:rgb(255, 255, 255)">RED</button>
         <button id="blue" style="background-color:rgb(0, 0, 255); color:rgb(255, 255, 255)">BLUE</button> -->
-        <a-scene background="color:rgb(0, 0, 0);">
-            <a-entity id="player" camera wasd-controls look-controls position="0 1.6 0">
+        <a-scene player-pos background="color:rgb(0, 0, 0);">
+            <a-entity id="player1" camera wasd-controls look-controls position="0 1.6 0">
                 <a-entity   cursor raycaster="far:20; objects:.interactive" 
                             position="0 0 -0.1"
                             geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
                             material="color: white; shader: flat"></a-entity>
             </a-entity>
-            <a-entity id="bodyHitBox" position="0 1.7 0">
+            <a-entity id="HitBoxPlayer1" position="0 1.7 0">
                 <a-entity geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"></a-entity>
                 <a-entity position="0 -0.8 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"></a-entity>
             </a-entity>
+
+            <a-entity id="player2" camera wasd-controls look-controls position="0 1.6 0">
+                <a-entity   cursor raycaster="far:20; objects:.interactive" 
+                            position="0 0 -0.1"
+                            geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
+                            material="color: white; shader: flat"></a-entity>
+            </a-entity>
+            <a-entity id="HitBoxPlayer2" position="0 1.7 0">
+                <a-entity geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"></a-entity>
+                <a-entity position="0 -0.8 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"></a-entity>
+            </a-entity>
+                                             
 
             <a-entity class="ground"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
 
@@ -65,38 +77,55 @@
 
                 document.querySelector('#blue_button').querySelector('.button').addEventListener('click', function(){
                         socket.emit('blue');
-                        socket.emit('playerPos');
                 });
 
             });
 
-            AFRAME.registerComponent('playerPos', {
+            AFRAME.registerComponent('player-pos', {
                 tick: function () {
-                console.log("tick");
+                    let xPosPlayer1 = document.querySelector("#player1").getAttribute('position').x;
+                    //console.log( "xPos: " + xPos);
+                    let yPosPlayer1 = document.querySelector("#player1").getAttribute('position').y;
+                    //console.log( "yPos: " + yPos);
+                    let zPosPlayer1 = document.querySelector("#player1").getAttribute('position').z;
+                    //console.log( "zPos: " + zPos);
+                    let player1Position = xPosPlayer1 + ' ' + yPosPlayer1 + ' ' + zPosPlayer1;
+
+                    let xRotPlayer1 = document.querySelector("#player1").getAttribute('rotation').x;
+                    //console.log( "xRot: " + xPos);
+                    let yRotPlayer1 = document.querySelector("#player1").getAttribute('rotation').y;
+                    //console.log( "yRot: " + yPos);
+                    let zRotPlayer1 = document.querySelector("#player1").getAttribute('rotation').z;
+                    //console.log( "zRot: " + zPos);
+                    let player1Rotation = xRotPlayer1 + ' ' + yRotPlayer1 + ' ' + zRotPlayer1;
+
+                    //document.body.style.backgroundColor = colorStr;
+                    document.querySelector('#HitBoxPlayer1').setAttribute('position', player1Position);
+                    document.querySelector('#HitBoxPlayer1').setAttribute('rotation', player1Rotation);
+
+
+                    let xPosPlayer2 = document.querySelector("#player2").getAttribute('position').x;
+                    //console.log( "xPos: " + xPos);
+                    let yPosPlayer2 = document.querySelector("#player2").getAttribute('position').y;
+                    //console.log( "yPos: " + yPos);
+                    let zPosPlayer2 = document.querySelector("#player2").getAttribute('position').z;
+                    //console.log( "zPos: " + zPos);
+                    let player2Position = xPosPlayer2 + ' ' + yPosPlayer2 + ' ' + zPosPlayer2;
+
+                    let xRotPlayer2 = document.querySelector("#player2").getAttribute('rotation').x;
+                    //console.log( "xRot: " + xPos);
+                    let yRotPlayer2 = document.querySelector("#player2").getAttribute('rotation').y;
+                    //console.log( "yRot: " + yPos);
+                    let zRotPlayer2 = document.querySelector("#player2").getAttribute('rotation').z;
+                    //console.log( "zRot: " + zPos);
+                    let player2Rotation = xRotPlayer2 + ' ' + yRotPlayer2 + ' ' + zRotPlayer2;
+
+                    //document.body.style.backgroundColor = colorStr;
+                    document.querySelector('#HitBoxPlayer2').setAttribute('position', player2Position);
+                    document.querySelector('#HitBoxPlayer2').setAttribute('rotation', player2Rotation);
+
+                    
                 }
-            });
-
-
-            socket.on('player_PosRot', (data) => {
-                let xPos = document.querySelector("#player").getAttribute('position').x;
-                //console.log( "xPos: " + xPos);
-                let yPos = document.querySelector("#player").getAttribute('position').y;
-                //console.log( "yPos: " + yPos);
-                let zPos = document.querySelector("#player").getAttribute('position').z;
-                //console.log( "zPos: " + zPos);
-                let playerPosition = xPos + ' ' + yPos + ' ' + zPos;
-
-                let xRot = document.querySelector("#player").getAttribute('rotation').x;
-                //console.log( "xRot: " + xPos);
-                let yRot = document.querySelector("#player").getAttribute('rotation').y;
-                //console.log( "yRot: " + yPos);
-                let zRot = document.querySelector("#player").getAttribute('rotation').z;
-                //console.log( "zRot: " + zPos);
-                let playerRotation = xRot + ' ' + yRot + ' ' + zRot;
-
-                //document.body.style.backgroundColor = colorStr;
-                document.querySelector('#bodyHitBox').setAttribute('position', playerPosition);
-                document.querySelector('#bodyHitBox').setAttribute('rotation', playerRotation);
             });
 
             //listen to event from server

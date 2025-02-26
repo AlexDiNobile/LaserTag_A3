@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         io.emit("color_change", {r:0, g:0, b:255});
     });
 
-    socket.on("playerPos", (data) => {
+    socket.on("playersPos", (data) => {
         console.log( "playerPos received" );
         io.emit("player_PosRot");
     });

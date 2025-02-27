@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
         }
         else if(socket.id === "playerTwo"){
             console.log( socket.id + " disconnected" );
-            playerNum = 0;
+            playerNum = 1;
         }
     });
 

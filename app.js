@@ -39,6 +39,24 @@ io.on('connection', (socket) => {
         console.log(socket.id);
         playerNum = 2;
     }
+
+    if(socket.id === "playerOne"){
+        socket.on("hide_player1", (data) => {
+            io.to(socket.id).emit("hide_play1");
+        });
+    }
+
+    socket.on("shooting", (data) => {
+        if(socket.id === "playerOne"){
+            console.log( "player one shooting" );
+            io.emit("player1_shooting", {id:socket.id});
+        }
+        else if(socket.id === "playerTwo"){
+            console.log( "player two shooting" );
+            io.emit("player2_shooting", {id:socket.id});
+        }
+    });
+
     if(socket.id === "playerOne"){
         socket.on("player1Pos", (data) => {
             //console.log( "Player One Present" );

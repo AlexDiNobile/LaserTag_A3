@@ -10,6 +10,24 @@
 
     <body>
         <a-scene player-pos background="color:rgb(0, 0, 0);">
+            <a-assets timeout="20000">
+                <!--Loading all A-frame Assets-->
+                
+                <!--Audio assets-->
+                <!--https://freetouse.com/music/lukrembo/marshmallow-->
+                <audio id="backgroundMusic" src="audio/backgroundMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <!--https://pixabay.com/sound-effects/bell-98033/-->
+                <audio id="laser1Sound" src="audio/laser1Sound.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <!--https://pixabay.com/sound-effects/cooking-frying-1-71871/-->
+                <audio id="laser2Sound" src="audio/laster2Sound.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
+                <audio id="loserSound" src="audio/loserSound.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
+                <audio id="victorySound" src="audio/victorySound.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
+                <audio id="teleportSound" src="audio/teleportSound.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+            </a-assets>
             <a-entity   id="player1" 
                         look-controls camera wasd-controls="acceleration: 25" 
                         position="0 1.6 0">
@@ -18,23 +36,27 @@
                             geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
                             material="color: white; shader: standard; emissive: rgb(255, 255, 255);"></a-entity>
             </a-entity>
-            <a-entity id="HitBoxPlayer1" position="0 1.7 0">
+            <a-entity   id="HitBoxPlayer1" 
+                        position="0 1.7 0">
                 <a-entity   id="headBox1"
                             class="button interactive"
                             geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"
-                            material="color: rgb(0, 187, 187); shader: standard; emissive: rgb(0, 187, 187);">
+                            material="color: rgb(0, 187, 187); shader: standard; emissive: rgb(0, 187, 187);"
+                            visible="true">
                 </a-entity>
                 <a-entity   id="bodyBox1"
                             class="button interactive"
                             position="0 -0.8 0" 
                             geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"
-                            material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);">
+                            material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);"
+                            visible="true">
                 </a-entity>
-                <a-entity   id="laserFire"
+                <a-entity   id="laserFireTeal"
                             position="0 -0.4 -10" 
                             rotation="90 0 0"
                             geometry="primitive: cylinder; height: 20; radius: 0.02;"
-                            material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);">
+                            material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);"
+                            visible="false">
                 </a-entity>
                 <a-entity   id="tealHitConfirm"
                             position="0 -0.4 0" 
@@ -64,6 +86,13 @@
                             geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"
                             material="color: rgb(255, 11, 92); shader: standard; emissive: rgb(227, 11, 92);">
                 </a-entity>
+                <a-entity   id="laserFirePink"
+                            position="0 -0.4 -10" 
+                            rotation="90 0 0"
+                            geometry="primitive: cylinder; height: 20; radius: 0.02;"
+                            material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(227, 11, 92);"
+                            visible="false">
+                </a-entity>
                 <a-entity   id="pinkHitConfirm"
                             position="0 -0.4 0" 
                             geometry="primitive: cylinder; openEnded: true; height: 2.5;" 
@@ -72,39 +101,33 @@
                 </a-entity>
             </a-entity>
 
-            <!-- red button -->
-            <a-entity id="red_button" position="2 0.6 -1">
-                <a-entity class="button interactive" position="0 0.6 0" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(255, 100, 100)"
-                            animation__mouseenter="property:material.color; type:color; to:rgb(255, 0, 0); startEvents:mouseenter; dur:200"
-                            animation__mouseleave="property:material.color; type:color; to:rgb(255, 100, 100); startEvents:mouseleave; dur:200"
-                            animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300" shadow></a-entity>
-                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)" shadow></a-entity>
-            </a-entity>
-
-            <!-- blue button -->
-            <a-entity id="blue_button" position="-2 0.6 -1">
-                <a-entity class="button interactive" position="0 0.6 0" geometry="primitive:cylinder; radius:0.15; height:0.2;" material="color:rgb(100, 100, 255)"
-                            animation__mouseenter="property:material.color; type:color; to:rgb(0, 0, 255); startEvents:mouseenter; dur:200"
-                            animation__mouseleave="property:material.color; type:color; to:rgb(100, 100, 255); startEvents:mouseleave; dur:200"
-                            animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300" shadow></a-entity>
-                <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)" shadow></a-entity>
-            </a-entity>
-
             <a-entity   id="Environment;"
                 environment="preset:starry;">
             </a-entity>
-
-            <a-entity class="ground" geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
 
         </a-scene>
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            var laser1Sound = new Audio('audio/laser1Sound.mp3');
+            var laser2Sound = new Audio('audio/laster2Sound.mp3');
+            var loserSound = new Audio('audio/loserSound.mp3');
+            var victorySound = new Audio('audio/victorySound.mp3');
+            var teleportSound = new Audio('audio/teleportSound.mp3');
+
+
             const socket = io();
 
             socket.on('connect', (userData) => {
                 console.log('I exist!');
                 console.log(socket.id);
+                socket.emit('hide_player1');
+
+                socket.on('hide_play1', (data) => {
+                console.log("hiding");
+                document.querySelector('#headBox1').setAttribute('visible', 'false');
+                document.querySelector('#bodyBox1').setAttribute('visible', 'false');
+            });
 
                 //put code here so that we know that socket.io has initailized ...
                 document.querySelector('#headBox1').addEventListener('click', function(){
@@ -119,12 +142,36 @@
                 document.querySelector('#headBox2').addEventListener('click', function(){
                     console.log("player 2 hit");    
                     socket.emit('pinkHit');
+                    loserSound.play();  
                 });
                 document.querySelector('#bodyBox2').addEventListener('click', function(){
-                    console.log("player 2 hit");    
+                    console.log("player 2 hit");   
                     socket.emit('pinkHit');
+                    loserSound.play(); 
+                });
+                
+                document.addEventListener('mousedown', function(){
+                    console.log("shooting");
+                    socket.emit('shooting');
                 });
 
+                
+                socket.on('player1_shooting', (data) => {
+                    if(data.id === "playerOne"){
+                        console.log("teal shooting");
+                        document.querySelector('#laserFireTeal').setAttribute('visible', 'true');
+                        laser1Sound.play();
+                        setTimeout(() => document.querySelector('#laserFireTeal').setAttribute('visible', 'false'), 20);
+                    };
+                });
+                socket.on('player2_shooting', (data) => {
+                    if(data.id === "playerTwo"){
+                        console.log("pink shooting");
+                        document.querySelector('#laserFirePink').setAttribute('visible', 'true');
+                        laser2Sound.play();
+                        setTimeout(() => document.querySelector('#laserFirePink').setAttribute('visible', 'false'), 20);
+                    };
+                });
             });
 
             AFRAME.registerComponent('player-pos', {
@@ -171,11 +218,13 @@
 
             socket.on('teal_wins', (data) => {
                 document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
-                alert("Player One Wins (Teal)");
+                victorySound.play();
+                //alert("Player One Wins (Teal)");
             });
             socket.on('pink_wins', (data) => {
                 document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
-                alert("Player Two Wins (Pink)");
+                victorySound.play();
+                //alert("Player Two Wins (Pink)");
             });
 
         </script>

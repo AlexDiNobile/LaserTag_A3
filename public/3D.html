@@ -7,6 +7,8 @@
         <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
         <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
 
+        <script src="javascript/variables.js"></script>
+
         <link rel="stylesheet" href="css/user-gesture.css">
 
         <script>
@@ -22,8 +24,9 @@
                 document.querySelector('#user-gesture-overlay').style.display='none';
           
                 //start background music
-                let ambientSounds = document.querySelector('#bg_music');
-                ambientSounds.play();
+                let backgroundMusic = document.querySelector('#background-music');
+                
+                backgroundMusic.components.sound.playSound();
             };
 
         </script>
@@ -41,17 +44,7 @@
                 
                 <!--Audio assets-->
                 <!--https://freetouse.com/music/lukrembo/marshmallow-->
-                <audio id="backgroundMusic" src="audio/backgroundMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
-                <!--https://pixabay.com/sound-effects/bell-98033/-->
-                <audio id="laser1Sound" src="audio/laser1Sound.mp3" preload="auto" crossorigin="anonymous"></audio>
-                <!--https://pixabay.com/sound-effects/cooking-frying-1-71871/-->
-                <audio id="laser2Sound" src="audio/laster2Sound.mp3" preload="auto" crossorigin="anonymous"></audio>
-                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
-                <audio id="loserSound" src="audio/loserSound.mp3" preload="auto" crossorigin="anonymous"></audio>
-                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
-                <audio id="victorySound" src="audio/victorySound.mp3" preload="auto" crossorigin="anonymous"></audio>
-                <!--https://pixabay.com/sound-effects/plop-sound-made-with-my-mouth-100690/-->
-                <audio id="teleportSound" src="audio/teleportSound.mp3" preload="auto" crossorigin="anonymous"></audio>
+                <audio id="backgroundMusic" src="audio/backgroundMusic.mp3" preload="auto" crossorigin="anonymous" ></audio>
 
                 <a-asset-item id="arenaModel" src="assets/LaserTagArena.glb" preload="auto" crossorigin="anonymous"></a-asset-item>
                 <a-asset-item id="arenaModelNav" src="assets/LaserTagNav.glb" preload="auto" crossorigin="anonymous"></a-asset-item>
@@ -60,12 +53,15 @@
 
             </a-assets>
            <!--CameraRig setup uses nav meshes-->
-           
+           <a-entity id="background-music" sound="src:#backgroundMusic; autoplay:false; loop:true; rolloffFactor:0; volume:0.1"></a-entity>
        <!-- End Camera Rig -->
             <a-entity id="player1" 
                     movement-controls="speed: 0.4; constrainToNavMesh: true;" 
-                    position=" 0 0 0">
-                <a-entity id="player1camera" camera="active: false" position="0 1.65 0" look-controls>
+                    position="0 0 0">
+                <a-entity   id="player1camera" 
+                            camera="active: false" 
+                            position="0 1.65 0" 
+                            look-controls>
                     <a-entity id="player1cursor" cursor raycaster="far:40; objects:.interactive" 
                         position="0 0 -0.1"
                         geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
@@ -73,7 +69,6 @@
                     </a-entity>
                 </a-entity> 
             </a-entity>
-
             <a-entity   id="HitBoxPlayer1" 
                         position="0 2.5 0">
                 <a-entity   id="headBox1"
@@ -103,51 +98,20 @@
                             material="color: red; side: double; emissive: rgb(255, 0, 0); opacity: 0.5;"
                             visible="false">
                 </a-entity>
-                <!--
-                <a-entity   id="gameOverScreen1"
-                            geometry="primitive: plane; height: 2; width: 4"
-                            position="0 1000 0;" 
-                            material="color: red; side: double; emissive: rgb(100, 100, 100);"
-                            visible="false">
-                            <a-entity 
-                                id="player1PinkWin"    
-                                text="font: mozillavr; value: You Lose!; align: center; width: 4;"
-                                position="0 0.4 0"
-                                visible="false">
-                            </a-entity>
-                            <a-entity 
-                                id="player1TealWin"
-                                text="font: mozillavr; value: You Win!; align: center; width: 4;"
-                                position="0 0.4 0"
-                                visible="false">
-                            </a-entity>
-                            <a-entity 
-                                text="font: mozillavr; value: Play Again?; align: center; width: 2;"
-                                position="0 -0.15 0">
-                            </a-entity>
-                            <a-entity 
-                                id="restartButton"
-                                class="button interactive"
-                                geometry="primitive: box; height: 0.2; width: 0.8"
-                                position="0 0.05 -0.4;" 
-                                material="color: red; side: double; emissive: rgb(200, 200, 200);">
-                            </a-entity>
-                            <a-entity 
-                                text="font: mozillavr; value: Restart; align: center; width: 2;"
-                                position="0 0.1 0.1">
-                            </a-entity>
-                </a-entity>
-                            -->
             </a-entity>
 
             <a-entity id="player2" 
                     movement-controls="speed: 0.4; constrainToNavMesh: true;" 
                     position="0 0 0">
-                <a-entity id="player2camera" camera="active: false" position="0 1.65 0" look-controls>
-                    <a-entity id="player2cursor" cursor raycaster="far:40; objects:.interactive" 
-                        position="0 0 -0.1"
-                        geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
-                        material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
+                <a-entity   id="player2camera" 
+                            camera="active: false"
+                            position="0 1.65 0" 
+                            look-controls>
+                    <a-entity   id="player2cursor" 
+                                cursor raycaster="far:40; objects:.interactive"  
+                                position="0 0 -0.1"
+                                geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
+                                material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
                     </a-entity>
                 </a-entity> 
             </a-entity>
@@ -167,9 +131,9 @@
                             material="color: rgb(255, 11, 92); shader: standard; emissive: rgb(227, 11, 92);">
                 </a-entity>
                 <a-entity   id="laserFirePink"
-                            position="0 -0.1 -10" 
+                            position="0 -0.1 -20" 
                             rotation="90 0 0"
-                            geometry="primitive: cylinder; height: 20; radius: 0.02;"
+                            geometry="primitive: cylinder; height: 40; radius: 0.02;"
                             material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(227, 11, 92);"
                             visible="false">
                 </a-entity>
@@ -200,6 +164,10 @@
                             geometry="primitive:box; width:1; depth:1; height:1.5;" 
                             material="color:rgb(255, 255, 255)">
                 </a-entity>
+                <a-entity   position="0 1 0" 
+                            rotation="0 180 0"
+                            text="value: Player Two (Pink); width: 5; align: center;"> 
+                </a-entity>
             </a-entity>
             <a-entity   id="tealButton" 
                         position="4 0.6 4">
@@ -212,6 +180,10 @@
                 <a-entity   position="0 -0.2 0" 
                             geometry="primitive:box; width:1; depth:1; height:1.5;" 
                             material="color:rgb(255, 255, 255)">
+                </a-entity>
+                <a-entity   position="0 1 0" 
+                            rotation="0 180 0"
+                            text="value: Player One (Teal); width: 5; align: center;"> 
                 </a-entity>
             </a-entity>
             <a-entity   id="coopButton" 
@@ -227,8 +199,9 @@
                             material="color:rgb(255, 255, 255)">
                 </a-entity>
             </a-entity>
-            <a-entity   id="coopButtonReturn" 
-            position="0 0.6 -32">
+            <a-entity   id="startCoopGame" 
+                        position="0 0.6 -40"
+                        visible="true">
                 <a-entity   class="button interactive" 
                             position="0 0.6 0" 
                             geometry="primitive:cylinder; radius:0.3; height:0.2;" 
@@ -240,23 +213,63 @@
                             material="color:rgb(255, 255, 255)">
                 </a-entity>
             </a-entity>
+            <a-entity   id="textTimer"
+                        position="0 2 -40" 
+                        text="value: Start!; width: 10; align: center;"> 
+            </a-entity>
            
             <a-entity   id="Environment;"
-            environment="preset:starry; ground:flat">
+                        environment="preset:starry; ground:flat">
+
+                <a-gltf-model   id="arena" 
+                                gltf-model="#arenaModel" 
+                                class="button interactive" 
+                                position="0 0.1 0" 
+                                rotation="0 90 0">
+                </a-gltf-model>
+                <a-gltf-model   id="arenaNavMesh" 
+                                nav-mesh 
+                                visible="false" 
+                                gltf-model="#arenaModelNav" 
+                                position="0 0.1 0" 
+                                rotation="0 90 0">
+                </a-gltf-model>
+                <a-entity   id="compText"
+                            position="0 3.5 10" 
+                            rotation="0 180 0"
+                            text="value: Competetive; width: 30; align: center;"> 
+                    <a-entity   position="0 -1.5 0" 
+                                text="value: Fight your friend is a 1V1 laser tag battle. Each player has three lives and the player who destorys all their opponents lives first wins. Good Luck!; width: 10; align: center;"> 
+                    </a-entity>
+                </a-entity>
+                <a-entity   id="coopText"
+                            position="0 3.5 -10" 
+                            rotation="0 0 0"
+                            text="value: Cooperative; width: 30; align: center;"> 
+                    <a-entity   position="0 -1.7 0" 
+                                text="value: Work with your friends to destory 20 targets in under 10 seconds. Each player has their own set of targets they can shoot to contribute to the team's total. Good Luck!; width: 10; align: center;"> 
+                    </a-entity>
+                </a-entity>
             </a-entity>
-            <a-gltf-model id="arena" gltf-model="#arenaModel" class="button interactive" position="0 0.1 0" rotation="0 90 0"></a-gltf-model>
-            <a-gltf-model id="arenaNavMesh" nav-mesh visible="false" gltf-model="#arenaModelNav" position="0 0.1 0" rotation="0 90 0"></a-gltf-model>
 
             <a-entity   id="targets"
                         position="0 10 -75"
                         rotation="90 0 0">
                 <a-entity   id="target1"
                             class="button interactive" 
-                            onclick="targetHit();"
-                            position="0 0 0" 
+                            onclick="tealTargetHit();"
+                            position="2 1000 2" 
                             geometry="primitive:cylinder; radius:1; height:0.5;" 
-                            material="color:rgb(255, 150, 255)"
-                            visible="true">
+                            material="color:rgb(150, 150, 255); emissive: rgb(0, 187, 187);"
+                            visible="false">
+                </a-entity>
+                <a-entity   id="target2"
+                            class="button interactive" 
+                            onclick="pinkTargetHit();"
+                            position="-2 1000 -2" 
+                            geometry="primitive:cylinder; radius:1; height:0.5;" 
+                            material="color:rgb(255, 150, 150); emissive: rgb(227, 11, 92);"
+                            visible="false">
                 </a-entity>
             </a-entity>
 
@@ -265,19 +278,6 @@
         <script src="/socket.io/socket.io.js"></script>
        
         <script>
-            let playerNum = -1;
-            let friendly = true;
-            let tealHits = 0;
-            let pinkHits = 0;
-            let score = 0;
-
-            var laser1Sound = new Audio('audio/laser1Sound.mp3');
-            var laser2Sound = new Audio('audio/laster2Sound.mp3');
-            var loserSound = new Audio('audio/loserSound.mp3');
-            var victorySound = new Audio('audio/victorySound.mp3');
-            var teleportSound = new Audio('audio/teleportSound.mp3');
-
-
             const socket = io();
 
             socket.on('connect', (userData) => {
@@ -286,9 +286,8 @@
                 socket.on('assign_playernum', (data) => {
                     if(playerNum == -1)
                     {
-                        
                         playerNum = data.id;
-                        console.log("my number is "+playerNum);
+                        console.log("my number is " + playerNum);
                     }
                 });
                 socket.on('swap_cam', (data) => {
@@ -410,15 +409,12 @@
                     document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
                     alert("Teal Wins! Play Again?");
                     window.location.reload()
-                    //document.querySelector('#gameOverScreen1').setAttribute('visible', 'true');
-                    //document.querySelector('#gameOverScreen1').setAttribute('position', '0 0 -0.5');
-                    //document.querySelector('#player1TealWin').setAttribute('visible', 'true');
                 }
                 else{
                     document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
                     victorySound.play();
                     setTimeout(() => document.querySelector('#pinkHitConfirm').setAttribute('visible', 'false'), 1000);
-                    document.querySelector('#player1').setAttribute('position', '19 2.810 52');
+                    document.querySelector('#player1').setAttribute('position', '19 2.810 34');
                     document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
                     document.querySelector('#player1').components['movement-controls'].updateNavLocation();
@@ -433,9 +429,6 @@
             socket.on('pink_wins', (data) => {
                 if(pinkHits === 2){
                     document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
-                    //document.querySelector('#gameOverScreen1').setAttribute('visible', 'true');
-                    //document.querySelector('#gameOverScreen1').setAttribute('position', '0 0 -0.5');
-                    //document.querySelector('#player1PinkWin').setAttribute('visible', 'true');
                     alert("Pink Wins! Play Again?");
                     window.location.reload()
                 }
@@ -443,7 +436,7 @@
                     document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
                     victorySound.play();
                     setTimeout(() => document.querySelector('#tealHitConfirm').setAttribute('visible', 'false'), 1000);
-                    document.querySelector('#player1').setAttribute('position', '19 2.810 52');
+                    document.querySelector('#player1').setAttribute('position', '19 2.810 34');
                     document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
                     document.querySelector('#player1').components['movement-controls'].updateNavLocation();
@@ -460,57 +453,120 @@
         </script>
         <script>
 
-            function targetHit(){
+            function tealTargetHit(){
                 score++;
-                if(score === 1){
+                if(score === 1 || score === 11){
                     document.querySelector('#target1').setAttribute('position', '-3 -2 -4');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 2){
+                if(score === 2 || score === 12){
                     document.querySelector('#target1').setAttribute('position', '3 2 4');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 3){
+                if(score === 3 || score === 13){
                     document.querySelector('#target1').setAttribute('position', '-15 2 -2');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 4){
+                if(score === 4 || score === 14){
                     document.querySelector('#target1').setAttribute('position', '-5 6 1');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 5){
+                if(score === 5 || score === 15){
                     document.querySelector('#target1').setAttribute('position', '10 0 -2');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 6){
+                if(score === 6 || score === 16){
                     document.querySelector('#target1').setAttribute('position', '10 5 -3');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 7){
+                if(score === 7 || score === 17){
                     document.querySelector('#target1').setAttribute('position', '6 5 7');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 8){
+                if(score === 8 || score === 18){
                     document.querySelector('#target1').setAttribute('position', '12 5 2');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 9){
+                if(score === 9 || score === 19){
                     document.querySelector('#target1').setAttribute('position', '20 5 0');
+                    socket.emit('tealTallyScore', {tealScore: score});
                 }
-                if(score === 10){
-                    document.querySelector('#target1').setAttribute('position', '0 0 0');
+                if(score === 10 || score === 20){
+                    document.querySelector('#target1').setAttribute('position', '2 0 2');
+                    socket.emit('tealTallyScore', {tealScore: score});
+                }
+                if(score === 21){
+                    console.log("complete");
+                    score = 0;
+                }
+            }
+            function pinkTargetHit(){
+                score++;
+                if(score === 1 || score === 11){
+                    document.querySelector('#target2').setAttribute('position', ' 3  2  4');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 2 || score === 12){
+                    document.querySelector('#target2').setAttribute('position', '-3 -2 -4');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 3 || score === 13){
+                    document.querySelector('#target2').setAttribute('position', '15 -2 2');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 4 || score === 14){
+                    document.querySelector('#target2').setAttribute('position', '5 -6 -1');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 5 || score === 15){
+                    document.querySelector('#target2').setAttribute('position', '-10 -0 2');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 6 || score === 16){
+                    document.querySelector('#target2').setAttribute('position', '-10 -5 3');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 7 || score === 17){
+                    document.querySelector('#target2').setAttribute('position', '-6 -5 -7');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 8 || score === 18){
+                    document.querySelector('#target2').setAttribute('position', '-12 -5 -2');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 9 || score === 19){
+                    document.querySelector('#target2').setAttribute('position', '-20 -5 -0');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 10 || score === 20){
+                    document.querySelector('#target2').setAttribute('position', '-2 0 -2');
+                    socket.emit('pinkTallyScore', {pinkScore: score});
+                }
+                if(score === 21){
                     console.log("complete");
                     score = 0;
                 }
                 console.log(score);
             }
-
-            /*
-            document.querySelector('#restartButton').addEventListener('click', function(){
-                location.reload();
-                document.querySelector('#player1').setAttribute('position', '19 1000 52');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
-                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+            socket.on('coopWin', (data) => {
+                console.log("Teamwork!");
+                alert("Great Teamwork! Play Again?");
+                window.location.reload()
             });
-            */
+
+            socket.on('coopFailed', (data) => {
+                console.log("Nice Try");
+                alert("You didn't make it! Try Again?");
+                window.location.reload()
+            });
+
+            socket.on('timer' , (data) => {
+                console.log(data.time);
+                document.querySelector('#textTimer').setAttribute('text', 'value: ' + data.time);
+            });
             
-
-
             document.querySelector('#tealButton').querySelector('.button').addEventListener('click', function(){
-                document.querySelector('#player1').setAttribute('position', '19 2.810 52');
+                document.querySelector('#player1').setAttribute('position', '19 2.810 34');
                 document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
                 document.querySelector('#player1').components['movement-controls'].updateNavLocation();
@@ -535,16 +591,18 @@
                 document.querySelector('#player2').components['movement-controls'].updateNavLocation();
 
             });
-            document.querySelector('#coopButtonReturn').querySelector('.button').addEventListener('click', function(){
-                document.querySelector('#player1').setAttribute('position', '2 0 0');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
-                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+            document.querySelector('#startCoopGame').querySelector('.button').addEventListener('click', function(){
+                if(playerNum === 1){
+                    document.querySelector('#target1').setAttribute('position', '2 0 2');
+                    document.querySelector('#target1').setAttribute('visible', 'true');
+                    socket.emit('startTimer');
 
-                document.querySelector('#player2').setAttribute('position', '-2 0 0');
-                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
-                document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                }
+                if(playerNum === 2){
+                    document.querySelector('#target2').setAttribute('position', '-2 0 -2');
+                    document.querySelector('#target2').setAttribute('visible', 'true');
+                    socket.emit('startTimer');
+                }
             });
         </script>
     </body>

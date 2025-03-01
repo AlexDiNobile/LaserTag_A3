@@ -32,19 +32,20 @@ io.on('connection', (socket) => {
         socket.id = "playerOne";
         console.log(socket.id);
         playerNum = 1;
+        io.local.emit("assign_playernum", {id:playerNum});
+        io.local.emit("swap_cam", {id:playerNum});
     }
-    else if(playerNum == 1){
+    else if(playerNum == 1 && socket.id !== "playerOne"){
         console.log( socket.id + " Is Player Two" );
         socket.id = "playerTwo";
         console.log(socket.id);
         playerNum = 2;
+        console.log("precam swap");
+        //sends player number
+        io.local.emit("assign_playernum", {id:playerNum});
+        io.local.emit("swap_cam", {id:playerNum});
     }
 
-    if(socket.id === "playerOne"){
-        socket.on("hide_player1", (data) => {
-            io.to(socket.id).emit("hide_play1");
-        });
-    }
 
     socket.on("shooting", (data) => {
         if(socket.id === "playerOne"){
@@ -55,7 +56,9 @@ io.on('connection', (socket) => {
             console.log( "player two shooting" );
             io.emit("player2_shooting", {id:socket.id});
         }
+    
     });
+    
 
     if(socket.id === "playerOne"){
         socket.on("player1Pos", (data) => {
@@ -69,7 +72,7 @@ io.on('connection', (socket) => {
             io.emit("player2_update", {xPos:data.xPos, yPos:data.yPos, zPos:data.zPos, xRot:data.xRot, yRot:data.yRot, zRot:data.zRot});
         });
     }
-
+    
     socket.on('disconnect', () => {
         if(socket.id === "playerOne"){
             console.log( socket.id + " disconnected" );
@@ -77,7 +80,13 @@ io.on('connection', (socket) => {
         }
         else if(socket.id === "playerTwo"){
             console.log( socket.id + " disconnected" );
-            playerNum = 1;
+            //if player 1 is not disconnected already, prepare for player 2 to join
+            //otherwise keep as 0 as we will need both players to join
+            if(playerNum!=0)
+            {
+                playerNum = 1;
+            }
+            
         }
     });
 
@@ -91,6 +100,8 @@ io.on('connection', (socket) => {
         console.log( "player 2 hit" );
         io.emit("teal_wins", {r:0, g:0, b:255});
     });
+
+    
     //question 1: how do you continuously update the network, e.g., users position and orientation?
     //question 2: how do you synch clients to current state?
 });

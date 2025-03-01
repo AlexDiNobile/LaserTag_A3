@@ -23,6 +23,8 @@ app.get( '/3D', function( req, res ){
 //https://socket.io/docs/v3/emit-cheatsheet/
 
 let playerNum = 0;
+let coopTotal = 0;
+let timerStarted = false;
 
 io.on('connection', (socket) => {
     console.log( socket.id + " connected" );
@@ -82,23 +84,59 @@ io.on('connection', (socket) => {
             console.log( socket.id + " disconnected" );
             //if player 1 is not disconnected already, prepare for player 2 to join
             //otherwise keep as 0 as we will need both players to join
-            if(playerNum!=0)
+            if(playerNum != 0)
             {
                 playerNum = 1;
             }
-            
         }
     });
 
     socket.on("tealHit", (data) => {
         console.log( "player 1 hit" );
-        io.emit("pink_wins", {r:255, g:0, b:0});         //to all connected clients
-        //io.socket.emit("color_change", {r:255, g:0, b:0});  //to everyone but sender
+        io.emit("pink_wins", {r:255, g:0, b:0});
     });
 
     socket.on("pinkHit", (data) => {
         console.log( "player 2 hit" );
-        io.emit("teal_wins", {r:0, g:0, b:255});
+        io.emit("teal_wins", {r:255, g:0, b:0});
+    });
+
+    socket.on("startTimer", (data) => {
+        if(timerStarted === false){
+            var timer = 10;
+            var timerCountdown = setInterval(function(){
+                console.log(timer);
+                io.sockets.emit('timer', {time:timer});
+                timer--
+                if (timer === -1) {
+                    io.sockets.emit('coopFailed');
+                    clearInterval(timerCountdown);
+                    timerStarted = false;
+                }
+            }, 1000);
+            timerStarted = true;
+        }
+    });
+
+    socket.on("tealTallyScore", (data) => {
+        coopTotal++;
+        console.log(data.tealScore);
+        console.log("score is:" + coopTotal);
+        if(coopTotal === 20){
+            console.log("Teal Team work!");
+            io.emit("coopWin");
+            coopTotal = 0;
+        }
+    });
+    socket.on("pinkTallyScore", (data) => {
+        coopTotal++;
+        console.log(data.pinkScore);
+        console.log("score is:" + coopTotal);
+        if(coopTotal === 20){
+            console.log("Pink Team work!");
+            io.emit("coopWin");
+            coopTotal = 0;
+        }
     });
 
     

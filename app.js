@@ -28,8 +28,8 @@ io.on('connection', (socket) => {
         console.log(socket.id);
         playerNum = 1;
 
-        //locally emit the player number to the client
-        io.local.emit("assign_playernum", {id:playerNum});
+        //emit the player number to the client
+        socket.emit("assign_playernum", {id:playerNum});
     }
     //if there is already a player in the lobby and the connecting player is not player one
     else if(playerNum == 1 && socket.id !== "playerOne"){
@@ -39,8 +39,8 @@ io.on('connection', (socket) => {
         console.log(socket.id);
         playerNum = 2;
 
-        //locally emit the player number to the client
-        io.local.emit("assign_playernum", {id:playerNum});
+        //emit the player number to the client
+        socket.emit("assign_playernum", {id:playerNum});
     }
     //when recieved that players are shooting
     socket.on("shooting", (data) => {

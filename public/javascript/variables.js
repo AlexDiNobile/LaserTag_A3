@@ -9,5 +9,4 @@ let score = 0;
 var laser1Sound = new Audio('audio/laser1Sound.mp3');
 var laser2Sound = new Audio('audio/laster2Sound.mp3');
 var victorySound = new Audio('audio/victorySound.mp3');
-var teleportSound = new Audio('audio/teleportSound.mp3');
 var backgroundMusic = new Audio('audio/backgroundMusic');

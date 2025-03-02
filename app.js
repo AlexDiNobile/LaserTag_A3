@@ -19,9 +19,7 @@ let coopTotal = 0;
 
 //on player connection
 io.on('connection', (socket) => {
-    //print that a play has connected
-    console.log( socket.id + " connected" );
-
+    
     //if the number of players is 0
     if(playerNum == 0){
         //make the first player to join player one
@@ -32,8 +30,6 @@ io.on('connection', (socket) => {
 
         //locally emit the player number to the client
         io.local.emit("assign_playernum", {id:playerNum});
-        //locally emit the player number to the client for camera swap
-        io.local.emit("swap_cam", {id:playerNum});
     }
     //if there is already a player in the lobby and the connecting player is not player one
     else if(playerNum == 1 && socket.id !== "playerOne"){
@@ -45,10 +41,7 @@ io.on('connection', (socket) => {
 
         //locally emit the player number to the client
         io.local.emit("assign_playernum", {id:playerNum});
-        //locally emit the player number to the client for camera swap
-        io.local.emit("swap_cam", {id:playerNum});
     }
-
     //when recieved that players are shooting
     socket.on("shooting", (data) => {
         //if the shooting player is player one
@@ -65,10 +58,15 @@ io.on('connection', (socket) => {
         }
     
     });
+    socket.on("joinGame", (data) => {
+        //print that a play has connected
+    console.log( socket.id + " connected" );
+
     
     //if the player ID is connected to player one
     if(socket.id === "playerOne"){
         //when player one data is received
+        console.log("player 1 moving");
         socket.on("player1Pos", (data) => {
             //emit the data to all the clients
             io.emit("player1_update", {xPos:data.xPos, yPos:data.yPos, zPos:data.zPos, xRot:data.xRot, yRot:data.yRot, zRot:data.zRot});
@@ -77,11 +75,14 @@ io.on('connection', (socket) => {
     //if the player ID is connected to player two
     else if(socket.id === "playerTwo"){
         //when player two data is received
+        console.log("player 2 moving");
         socket.on("player2Pos", (data) => {
             //emit the data to all the clients
             io.emit("player2_update", {xPos:data.xPos, yPos:data.yPos, zPos:data.zPos, xRot:data.xRot, yRot:data.yRot, zRot:data.zRot});
         });
     }
+    });
+    
     //on player disconnect
     socket.on('disconnect', () => {
         //if the player is player one
@@ -89,6 +90,7 @@ io.on('connection', (socket) => {
             console.log( socket.id + " disconnected" );
             //set the player number to zero (to prepare for when player one joins again)
             playerNum = 0;
+            io.emit('resetScores');
 
         }
         //if the player is player two
@@ -100,6 +102,7 @@ io.on('connection', (socket) => {
                 playerNum = 1;
 
             }
+            io.emit('resetScores');
         }
     });
     //on teal being hit recieved

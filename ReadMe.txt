@@ -1,3 +1,18 @@
+-------CONTROLS
+	Mouse and Keyboard
+	- Use WASD to move
+	- Click, hold and drag to move the camera
+	- Click and release to shoot 
+
+	Mobile
+	- Move the phone to move the camera
+	- Tap or tap and hold to move the player
+	- Tap the screen to shoot
+
+	Note
+	- To hit a button or a target, they must be in the middle of the screen behind the reticle.
+
+
 -------Overview of what you did?
 	For this project, I created a two-player A-Frame interactive experience with a competitive and collaborative mode. To achieve this, I used WebSockets to connect the two players. The competitive experience is laser tag, in which both players have three lives and must fight each other until one has eliminated all the other's lives, claiming victory. The collaborative experience is an aim trainer in which players must work together to destroy 20 teleporting targets as quickly as possible. 
 Both players have different perspectives, and they can see where the other is because their locations are emitted from the client to the server to be shared with everyone in the experience. Boxes are then attached to these locations that represent the players’ avatars. Aside from allowing players to see each other, the game interactions provide visual and auditory feedback. When a player shoots their laser, they can see it in their view and get a specific sound effect (player one and player two’s lasers sound different). In the laser tag mode, there is also visual and auditory feedback for when a player gets hit by their enemy. 
@@ -18,7 +33,6 @@ One of these was that it was tough to transfer the players' movement data betwee
 	Implementing the nav mesh was challenging, but with some time and patience, I could make it work with my code. Creating the model and nav mesh in Blender was time-consuming, and I encountered strange issues. For example, in Blender, the nav mesh has to be made of one material, or it won’t work correctly. I slowly figured out these issues and created a good nav mesh that worked in my final interactive experience.
 	In the end, I was never able to figure out the issue that sometimes caused the second player’s camera to get stuck; however, I did find that when I ran both players locally on one computer, the issue never happened; it only ever occurred when the second player was joining over Ngrok. This discovery and my lack of ability to find the root of the issue after hours of testing and research leads me to believe that the problem is caused by important information being lost while the second player loads in over Ngrok instead of an actual issue in the code itself. Still, I cannot say for sure if that is genuinely the cause.
 	Overall, I am pleased with the result of all my hard work and am happy with the outcome.
-
 
 
 -------The URL to your GitHub repository: https://github.com/AlexDiNobile/LaserTag_A3 

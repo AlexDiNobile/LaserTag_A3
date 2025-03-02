@@ -363,20 +363,10 @@
             socket.on('connect', (userData) => {
                 //Assign a local ID to their computer
                 socket.on('assign_playernum', (data) => {
-                    //If there are no players currently in the room
-                    if(playerNum === -1)
-                    {
-                        //give them the player 1 ID
-                        playerNum = data.id;
-                    }
-                });
-                //Swap the player cameras so that player two isn't looking through player one's camera
-                socket.on('swap_cam', (data) => {
-                    console.log('Swapping Cams');
-                    //if they are player one
-                    
-                });
+                    //set player number
+                    playerNum = data.id;
 
+                });
                 //If player 1s head hit box is clicked
                 document.querySelector('#headBox1').addEventListener('click', function(){
                     //if friendly is false

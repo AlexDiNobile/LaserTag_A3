@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>LAZER TAG</title>
+        <title>LAZER TAG!</title>
         <meta charset="utf-8" />
+        <!--Link needed assets-->
         <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
         <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
-
         <script src="javascript/variables.js"></script>
-
         <link rel="stylesheet" href="css/user-gesture.css">
 
         <script>
+            //Start experience function
             AFRAME.registerComponent('start-experience',{
                 init:function(){
                     console.log('sence loaded'); 
                     document.querySelector('#user-gesture-button').style.display='block';
-                    //teleport('noTelePads');
                 }
             });
             //will be called when "enter experience" is clicked
@@ -25,7 +24,6 @@
           
                 //start background music
                 let backgroundMusic = document.querySelector('#background-music');
-                
                 backgroundMusic.components.sound.playSound();
             };
 
@@ -46,31 +44,39 @@
                 <!--https://freetouse.com/music/lukrembo/marshmallow-->
                 <audio id="backgroundMusic" src="audio/backgroundMusic.mp3" preload="auto" crossorigin="anonymous" ></audio>
 
+                <!--Environment assets-->
                 <a-asset-item id="arenaModel" src="assets/LaserTagArena.glb" preload="auto" crossorigin="anonymous"></a-asset-item>
                 <a-asset-item id="arenaModelNav" src="assets/LaserTagNav.glb" preload="auto" crossorigin="anonymous"></a-asset-item>
 
 
 
             </a-assets>
-           <!--CameraRig setup uses nav meshes-->
+           <!--Background music-->
            <a-entity id="background-music" sound="src:#backgroundMusic; autoplay:false; loop:true; rolloffFactor:0; volume:0.1"></a-entity>
-       <!-- End Camera Rig -->
-            <a-entity id="player1" 
+
+           <!--Player One camera and cursor--> 
+           <a-entity id="player1" 
                     movement-controls="speed: 0.4; constrainToNavMesh: true;" 
                     position="0 0 0">
-                <a-entity   id="player1camera" 
-                            camera="active: false" 
+                <!--Player one camera   camera="active: false" -->
+                <a-entity   id="player1camera"
                             position="0 1.65 0" 
-                            look-controls>
-                    <a-entity id="player1cursor" cursor raycaster="far:40; objects:.interactive" 
-                        position="0 0 -0.1"
-                        geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
-                        material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
+                            look-controls 
+                            >
+                    <!--Player one reticle-->
+                    <a-entity   id="player1cursor" 
+                                cursor="rayOrigin:xrselect" 
+                                raycaster="far:40; objects:.interactive" 
+                                position="0 0 -0.1"
+                                geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
+                                material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
                     </a-entity>
                 </a-entity> 
             </a-entity>
+            <!--Player one body-->
             <a-entity   id="HitBoxPlayer1" 
                         position="0 2.5 0">
+                <!--Head hit box-->
                 <a-entity   id="headBox1"
                             position="0 -0.2 0"
                             class="button interactive"
@@ -78,6 +84,7 @@
                             material="color: rgb(0, 187, 187); shader: standard; emissive: rgb(0, 187, 187);"
                             visible="true">
                 </a-entity>
+                <!--body hit box-->
                 <a-entity   id="bodyBox1"
                             class="button interactive"
                             position="0 -1 0" 
@@ -85,6 +92,7 @@
                             material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);"
                             visible="true">
                 </a-entity>
+                <!--laser fire-->
                 <a-entity   id="laserFireTeal"
                             position="0 -0.1 -20" 
                             rotation="90 0 0"
@@ -92,6 +100,7 @@
                             material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(0, 187, 187);"
                             visible="false">
                 </a-entity>
+                <!--red screen to indicate being hit-->
                 <a-entity   id="tealHitConfirm"
                             position="0 -0.3 0" 
                             geometry="primitive: cylinder; openEnded: false; height: 2.5;" 
@@ -100,36 +109,43 @@
                 </a-entity>
             </a-entity>
 
+            <!--Player two body-->
             <a-entity id="player2" 
                     movement-controls="speed: 0.4; constrainToNavMesh: true;" 
                     position="0 0 0">
+                <!--Player two camera-->
                 <a-entity   id="player2camera" 
                             camera="active: false"
                             position="0 1.65 0" 
                             look-controls>
+                    <!--Player two reticle-->
                     <a-entity   id="player2cursor" 
-                                cursor raycaster="far:40; objects:.interactive"  
+                                cursor="rayOrigin:xrselect" 
+                                raycaster="far:40; objects:.interactive" 
                                 position="0 0 -0.1"
                                 geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
                                 material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
                     </a-entity>
                 </a-entity> 
             </a-entity>
+            <!--Player two body-->
             <a-entity   id="HitBoxPlayer2" 
                         position="0 2.5 0">
+                <!--Head hit box-->
                 <a-entity   id="headBox2"
                             class="button interactive"   
                             position="0 -0.2 0"          
                             geometry="primitive:box; width:0.5; depth:0.5; height:0.6;"
                             material="color: rgb(227, 11, 92); shader: standard; emissive: rgb(227, 11, 92);">
-
                 </a-entity>
+                <!--Body hit box-->
                 <a-entity   id="bodyBox2"
                             class="button interactive"
                             position="0 -1 0" 
                             geometry="primitive:box; width:0.5; depth:0.5; height:0.8;"
                             material="color: rgb(255, 11, 92); shader: standard; emissive: rgb(227, 11, 92);">
                 </a-entity>
+                <!--laser fire-->
                 <a-entity   id="laserFirePink"
                             position="0 -0.1 -20" 
                             rotation="90 0 0"
@@ -137,6 +153,7 @@
                             material="color: rgb(0, 187, 187);shader: standard; emissive: rgb(227, 11, 92);"
                             visible="false">
                 </a-entity>
+                <!--red screen to indicate being hit-->
                 <a-entity   id="pinkHitConfirm"
                             position="0 -0.3 0" 
                             geometry="primitive: cylinder; openEnded: true; height: 2.5;" 
@@ -145,6 +162,7 @@
                 </a-entity>
             </a-entity>
 
+            <!--A shield between the fighting area and friendly area so players can shoot each other when they aren't suppose to-->
             <a-entity   id="Shield" 
                         class="button interactive"
                         position="0 9 17" 
@@ -152,6 +170,7 @@
                         geometry="primitive:box; width:2; depth:20; height:40;"
                         visible="false" >
             </a-entity>
+            <!--Button for teleporting pink to their spot in the arena-->
             <a-entity   id="pinkButton" 
                         position="-4 0.6 4">
                 <a-entity   class="button interactive" 
@@ -169,6 +188,8 @@
                             text="value: Player Two (Pink); width: 5; align: center;"> 
                 </a-entity>
             </a-entity>
+
+            <!--Button for teleporting teal to their spot in the arena-->
             <a-entity   id="tealButton" 
                         position="4 0.6 4">
                 <a-entity   class="button interactive" 
@@ -186,6 +207,8 @@
                             text="value: Player One (Teal); width: 5; align: center;"> 
                 </a-entity>
             </a-entity>
+
+            <!--Button for teleporting both players to the coop area-->
             <a-entity   id="coopButton" 
             position="0 0.6 -4">
                 <a-entity   class="button interactive" 
@@ -199,6 +222,7 @@
                             material="color:rgb(255, 255, 255)">
                 </a-entity>
             </a-entity>
+            <!--Button for starting the coop game-->
             <a-entity   id="startCoopGame" 
                         position="0 0.6 -40"
                         visible="true">
@@ -213,20 +237,91 @@
                             material="color:rgb(255, 255, 255)">
                 </a-entity>
             </a-entity>
-            <a-entity   id="textTimer"
-                        position="0 2 -40" 
+            <a-entity   position="0 2 -40" 
                         text="value: Start!; width: 10; align: center;"> 
             </a-entity>
+
+            <!--Button for reloading players when teal wins-->
+            <a-entity   id="tealWinsRestart" 
+                        position="11.5 -25 0">
+                    <a-entity   class="button interactive" 
+                                position="0 0.6 0" 
+                                geometry="primitive:cylinder; radius:0.3; height:0.2;" 
+                                material="color:rgb(100, 155, 200)"
+                                animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300">
+                    </a-entity>
+                    <a-entity   position="0 -0.2 0" 
+                                geometry="primitive:box; width:1; depth:1; height:1.5;" 
+                                material="color:rgb(255, 255, 255)">
+                    </a-entity>
+                    <a-entity   position="0 1 0" 
+                                rotation="0 180 0"
+                                text="value: Respawn; width: 5; align: center;"> 
+                    </a-entity>
+            </a-entity>
+            <a-entity   position="11.5 -20 4.5" 
+                        rotation="0 180 0"
+                        text="value: Teal Wins; width: 50; align: center;">  >
+            </a-entity>
+
+            <!--Button for reloading players when pink wins-->
+            <a-entity   id="pinkWinsRestart" 
+                        position="35 -25 0">
+                <a-entity   class="button interactive" 
+                            position="0 0.6 0" 
+                            geometry="primitive:cylinder; radius:0.3; height:0.2;" 
+                            material="color:rgb(255, 100, 100)"
+                            animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300">
+                </a-entity>
+                <a-entity   position="0 -0.2 0" 
+                            geometry="primitive:box; width:1; depth:1; height:1.5;" 
+                            material="color:rgb(255, 255, 255)">
+                </a-entity>
+                <a-entity   position="0 1 0" 
+                            rotation="0 180 0"
+                            text="value: Respawn; width: 5; align: center;"> 
+                </a-entity>
+            </a-entity>
+            <a-entity   position="35 -20 4.5" 
+                        rotation="0 180 0"
+                        text="value: Pink Wins; width: 50; align: center;">  >
+            </a-entity>
+
+            <!--Button for reloading players when they win the co-op game-->
+            <a-entity   id="coopWinRestart" 
+                        position="-11.5 -25 0">
+                <a-entity   class="button interactive" 
+                            position="0 0.6 0" 
+                            geometry="primitive:cylinder; radius:0.3; height:0.2;" 
+                            material="color:rgb(100, 100, 100)"
+                            animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300">
+                </a-entity>
+                <a-entity   position="0 -0.2 0" 
+                            geometry="primitive:box; width:1; depth:1; height:1.5;" 
+                            material="color:rgb(255, 255, 255)">
+                </a-entity>
+                <a-entity   position="0 1 0" 
+                            rotation="0 180 0"
+                            text="value: Respawn; width: 5; align: center;"> 
+                </a-entity>
+            </a-entity>
+            <a-entity   position="-11.2 -20 4.5" 
+                        rotation="0 180 0"
+                        text="value: Hooray!; width: 50; align: center;">  >
+            </a-entity>
            
+            <!--Environment for the game world-->
             <a-entity   id="Environment;"
                         environment="preset:starry; ground:flat">
 
+                <!--Arena-->
                 <a-gltf-model   id="arena" 
                                 gltf-model="#arenaModel" 
                                 class="button interactive" 
                                 position="0 0.1 0" 
                                 rotation="0 90 0">
                 </a-gltf-model>
+                <!--Arena Nav Mesh (walkable areas_-->
                 <a-gltf-model   id="arenaNavMesh" 
                                 nav-mesh 
                                 visible="false" 
@@ -234,27 +329,31 @@
                                 position="0 0.1 0" 
                                 rotation="0 90 0">
                 </a-gltf-model>
+                <!--Comp Instructions-->
                 <a-entity   id="compText"
                             position="0 3.5 10" 
                             rotation="0 180 0"
-                            text="value: Competetive; width: 30; align: center;"> 
+                            text="value: Competitive; width: 30; align: center;"> 
                     <a-entity   position="0 -1.5 0" 
-                                text="value: Fight your friend is a 1V1 laser tag battle. Each player has three lives and the player who destorys all their opponents lives first wins. Good Luck!; width: 10; align: center;"> 
+                                text="value: Fight your friend in a 1V1 laser tag battle. Each player has three lives and the player who destroys all their opponents lives first wins. Good Luck!; width: 10; align: center;"> 
                     </a-entity>
                 </a-entity>
+                <!--Coop Instructions-->
                 <a-entity   id="coopText"
                             position="0 3.5 -10" 
                             rotation="0 0 0"
                             text="value: Cooperative; width: 30; align: center;"> 
                     <a-entity   position="0 -1.7 0" 
-                                text="value: Work with your friends to destory 20 targets in under 10 seconds. Each player has their own set of targets they can shoot to contribute to the team's total. Good Luck!; width: 10; align: center;"> 
+                                text="value: Work with your friends to destroy 20 targets as fast as you can. Each player has their own set of targets they can shoot to contribute to the team's total. Good Luck!; width: 10; align: center;"> 
                     </a-entity>
                 </a-entity>
             </a-entity>
 
+            <!--Targets for the coop game-->
             <a-entity   id="targets"
                         position="0 10 -75"
                         rotation="90 0 0">
+                <!--Teal target-->
                 <a-entity   id="target1"
                             class="button interactive" 
                             onclick="tealTargetHit();"
@@ -263,6 +362,7 @@
                             material="color:rgb(150, 150, 255); emissive: rgb(0, 187, 187);"
                             visible="false">
                 </a-entity>
+                <!--Pink target-->
                 <a-entity   id="target2"
                             class="button interactive" 
                             onclick="pinkTargetHit();"
@@ -272,35 +372,36 @@
                             visible="false">
                 </a-entity>
             </a-entity>
-
         </a-scene>
-
+        <!--Client Side Scripts-->
         <script src="/socket.io/socket.io.js"></script>
-       
         <script>
             const socket = io();
-
+            //When a player connects
             socket.on('connect', (userData) => {
-                console.log('I exist!');
-                console.log(socket.id);
+                //Assign a local ID to their computer
                 socket.on('assign_playernum', (data) => {
+                    //If there are no players currently in the room
                     if(playerNum == -1)
                     {
+                        //give them the player 1 ID
                         playerNum = data.id;
-                        console.log("my number is " + playerNum);
                     }
                 });
+                //Swap the player cameras so that player two isn't looking through player one's camera
                 socket.on('swap_cam', (data) => {
                     console.log('Swapping Cams');
+                    //if they are player one
                     if(playerNum === 1){
-                        console.log('Swapping Cams');
+                        //activiate the player one camera, disable player two camera and hide player two cursor
                         document.querySelector('#player2camera').setAttribute('camera', 'active', false);
                         document.querySelector('#player1camera').setAttribute('camera', 'active', true);
                         document.querySelector('#player2cursor').setAttribute('visible','false');
                         console.log('cam1enabled');
                     }
+                    //if they are player two
                     else if(playerNum === 2){
-                        console.log('Swapping Cams');
+                        //activiate the player two camera, disable player one camera and hide player one cursor
                         document.querySelector('#player1camera').setAttribute('camera', 'active', false);
                         document.querySelector('#player2camera').setAttribute('camera', 'active', true);
                         document.querySelector('#player1cursor').setAttribute('visible','false');
@@ -308,62 +409,122 @@
                     };
                 });
 
+                //If player 1s head hit box is clicked
                 document.querySelector('#headBox1').addEventListener('click', function(){
+                    //if friendly is false
                     if(friendly === false){
-                        console.log("player 1 hit");
+                        //emit a hit to server
                         socket.emit('tealHit');
                     }
                 });
-
+                //If player 1s body hit box is clicked
                 document.querySelector('#bodyBox1').addEventListener('click', function(){
+                    //if friendly is false
                     if(friendly === false){
-                        console.log("player 1 hit");
+                        //emit a hit to server
                         socket.emit('tealHit');
                     }
                 });
-
+                //If player 2s head hit box is clicked
                 document.querySelector('#headBox2').addEventListener('click', function(){
+                    //if friendly is false
                     if(friendly === false){
-                        console.log("player 2 hit");   
-                        socket.emit('pinkHit');
-                        loserSound.play(); 
+                        //emit a hit to server   
+                        socket.emit('pinkHit'); 
                     }
                 });
-
+                //If player 2s body hit box is clicked
                 document.querySelector('#bodyBox2').addEventListener('click', function(){
+                    //if friendly is false
                     if(friendly === false){
-                        console.log("player 2 hit");   
+                        //emit a hit to server   
                         socket.emit('pinkHit');
-                        loserSound.play(); 
                     }
                 });
                 
+                //if the players are clicking anywhere
                 document.addEventListener('click', function(){
-                        console.log("shooting");
+                        //emit shooting to server
                         socket.emit('shooting');
                 });
                
+            //if the teal button is pressed
+            document.querySelector('#tealButton').querySelector('.button').addEventListener('click', function(){
+                //teleport teal to their side of the arena
+                document.querySelector('#player1').setAttribute('position', '19 2.810 34');
+                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+                //make friendly false
+                friendly = false;
+            });
+            //if the pink button is pressed
+            document.querySelector('#pinkButton').querySelector('.button').addEventListener('click', function(){
+                //teleport pink to their side of the arena
+                document.querySelector('#player2').setAttribute('position', '-21.3 2.810 52');
+                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                //make friendly false
+                friendly = false;
+            });
+            //if the coop button is pressed
+            document.querySelector('#coopButton').querySelector('.button').addEventListener('click', function(){
+                //teleport player 1 to the coop arena
+                document.querySelector('#player1').setAttribute('position', '2 0 -32');
+                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
 
+                //teleport player 2 to the coop arena
+                document.querySelector('#player2').setAttribute('position', '-2 0 -32');
+                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+
+            });
+            //if the start coop button is pressed
+            document.querySelector('#startCoopGame').querySelector('.button').addEventListener('click', function(){
+                //if it is player one
+                if(playerNum === 1){
+                    //show player 1 targets
+                    document.querySelector('#target1').setAttribute('position', '2 0 2');
+                    document.querySelector('#target1').setAttribute('visible', 'true');
+
+                }
+                //if it is player two
+                if(playerNum === 2){
+                    //show player 2 targets
+                    document.querySelector('#target2').setAttribute('position', '-2 0 -2');
+                    document.querySelector('#target2').setAttribute('visible', 'true');
+                }
+            });
+                //when recieve that player one is shooting
                 socket.on('player1_shooting', (data) => {
                     if(data.id === "playerOne"){
-                        console.log("teal shooting");
+                        //show laser for a moment
                         document.querySelector('#laserFireTeal').setAttribute('visible', 'true');
                         laser1Sound.play();
+                        //hide laser again
                         setTimeout(() => document.querySelector('#laserFireTeal').setAttribute('visible', 'false'), 40);
                     };
                 });
+                //when recieve that player two is shooting
                 socket.on('player2_shooting', (data) => {
                     if(data.id === "playerTwo"){
-                        console.log("pink shooting");
+                        //show laser for a moment
                         document.querySelector('#laserFirePink').setAttribute('visible', 'true');
                         laser2Sound.play();
+                        //hide laser again
                         setTimeout(() => document.querySelector('#laserFirePink').setAttribute('visible', 'false'), 40);
                     };
                 });
             });
-
+            //Function for constantly undating the players positions
             AFRAME.registerComponent('player-pos', {
+                //Every rendered frame
                 tick: function () {
+                    //Get the position and rotation of player one
                     let xPosPlayer1 = document.querySelector("#player1").getAttribute('position').x ;
                     let yPosPlayer1 = document.querySelector("#player1").getAttribute('position').y + 1.6;
                     let zPosPlayer1 = document.querySelector("#player1").getAttribute('position').z;
@@ -372,8 +533,10 @@
                     let yRotPlayer1 = document.querySelector("#player1camera").getAttribute('rotation').y;
                     let zRotPlayer1 = document.querySelector("#player1camera").getAttribute('rotation').z;
 
+                    //emit player two data to the server
                     socket.emit('player1Pos', {xPos:xPosPlayer1, yPos:yPosPlayer1, zPos:zPosPlayer1, xRot:xRotPlayer1, yRot:yRotPlayer1, zRot:zRotPlayer1});
 
+                    //Get the position and rotation of player two
                     let xPosPlayer2 = document.querySelector("#player2").getAttribute('position').x;
                     let yPosPlayer2 = document.querySelector("#player2").getAttribute('position').y + 1.6;
                     let zPosPlayer2 = document.querySelector("#player2").getAttribute('position').z;
@@ -381,39 +544,72 @@
                     let xRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').x;
                     let yRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').y;
                     let zRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').z;
-
+                    
+                    //emit player one data to the server
                     socket.emit('player2Pos', {xPos:xPosPlayer2, yPos:yPosPlayer2, zPos:zPosPlayer2, xRot:xRotPlayer2, yRot:yRotPlayer2, zRot:zRotPlayer2});
                 }
             });
 
+            //recieve the player one positions
             socket.on('player1_update', (data) => {
+                
+                //put position and rotation values together
                 let player1Position = data.xPos + ' ' + data.yPos + ' ' + data.zPos;
                 let player1Rotation = data.xRot + ' ' + data.yRot + ' ' + data.zRot;
 
-                //document.body.style.backgroundColor = colorStr;
+                //Change the position and rotation
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', player1Position);
                 document.querySelector('#HitBoxPlayer1').setAttribute('rotation', player1Rotation);
             });
 
+            //recieve the player one positions from the server
             socket.on('player2_update', (data) => {
 
+                //put position and rotation values together
                 let player2Position = data.xPos + ' ' + data.yPos + ' ' + data.zPos;
                 let player2Rotation = data.xRot + ' ' + data.yRot + ' ' + data.zRot;
-
+                
+                //Change the position and rotation from the server
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', player2Position);
                 document.querySelector('#HitBoxPlayer2').setAttribute('rotation', player2Rotation);
             });
 
+            //recieve the teal wins data from the server
             socket.on('teal_wins', (data) => {
+                //if teal gets two hits on pink
                 if(tealHits === 2){
-                    document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
-                    alert("Teal Wins! Play Again?");
-                    window.location.reload()
-                }
-                else{
+                    //Show that pink had been hit
                     document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
                     victorySound.play();
                     setTimeout(() => document.querySelector('#pinkHitConfirm').setAttribute('visible', 'false'), 1000);
+                    //move the player positions to the "teal wins room"
+                    document.querySelector('#player1').setAttribute('position', '14 -25 0');
+                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+
+                    document.querySelector('#player2').setAttribute('position', '10 -25 0');
+                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                    //set friendly back to true
+                    friendly = true;
+                    //makes teals hits 0
+                    tealHits = 0;
+
+                    //if the respawn button in the middle of the room is pressed 
+                    document.querySelector('#tealWinsRestart').querySelector('.button').addEventListener('click', function(){
+                        //reload the page
+                        window.location.reload()
+                    });
+                }
+                else{
+                    //show that pink had been hit
+                    document.querySelector('#pinkHitConfirm').setAttribute('visible', 'true');
+                    victorySound.play();
+                    setTimeout(() => document.querySelector('#pinkHitConfirm').setAttribute('visible', 'false'), 1000);
+
+                     //move the player back to starting positions"
                     document.querySelector('#player1').setAttribute('position', '19 2.810 34');
                     document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
@@ -423,19 +619,45 @@
                     document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
                     document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+
+                    //increase teals total hits
                     tealHits++;
                 }
             });
+            //recieve the pink wins data from the server
             socket.on('pink_wins', (data) => {
                 if(pinkHits === 2){
-                    document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
-                    alert("Pink Wins! Play Again?");
-                    window.location.reload()
-                }
-                else{
+                    //Show that teal had been hit
                     document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
                     victorySound.play();
                     setTimeout(() => document.querySelector('#tealHitConfirm').setAttribute('visible', 'false'), 1000);
+                    //move the player positions to the "pink wins room"
+                    document.querySelector('#player1').setAttribute('position', '37 -25 0');
+                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+
+                    document.querySelector('#player2').setAttribute('position', '33 -25 0');
+                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                    //set friendly back to true
+                    friendly = true;
+                    //reset pinks hits
+                    pinkHits = 0;
+
+                    //if the respawn button in the middle of the room is pressed 
+                    document.querySelector('#pinkWinsRestart').querySelector('.button').addEventListener('click', function(){
+                        //reload the page
+                        window.location.reload()
+                    });
+                }
+                else{
+                    //show that teal had been hit
+                    document.querySelector('#tealHitConfirm').setAttribute('visible', 'true');
+                    victorySound.play();
+                    setTimeout(() => document.querySelector('#tealHitConfirm').setAttribute('visible', 'false'), 1000);
+                    //move the players back to their starting positions
                     document.querySelector('#player1').setAttribute('position', '19 2.810 34');
                     document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
@@ -446,163 +668,189 @@
                     document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
                     document.querySelector('#player2').components['movement-controls'].updateNavLocation();
 
+                    //increase pinks total hits
                     pinkHits++;
                 }
             });
 
-        </script>
-        <script>
-
+            //Function for when teal targets are hit in coop mode
             function tealTargetHit(){
+                //if the function is called increase teal score
                 score++;
+                //if the target is hit
                 if(score === 1 || score === 11){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '-3 -2 -4');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 2 || score === 12){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '3 2 4');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 3 || score === 13){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '-15 2 -2');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 4 || score === 14){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '-5 6 1');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 5 || score === 15){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '10 0 -2');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 6 || score === 16){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '10 5 -3');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 7 || score === 17){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '6 5 7');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 8 || score === 18){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '12 5 2');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 9 || score === 19){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '20 5 0');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the target is hit
                 if(score === 10 || score === 20){
+                    //changes it's position
                     document.querySelector('#target1').setAttribute('position', '2 0 2');
+                    //emit the hit to the server
                     socket.emit('tealTallyScore', {tealScore: score});
                 }
+                //if the score equals 21
                 if(score === 21){
-                    console.log("complete");
+                    //reset it
                     score = 0;
                 }
             }
+            //Function for when pink targets are hit in coop mode
             function pinkTargetHit(){
+                //if the function is called increase pinks score
                 score++;
+                //if the target is hit
                 if(score === 1 || score === 11){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', ' 3  2  4');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 2 || score === 12){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-3 -2 -4');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 3 || score === 13){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '15 -2 2');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 4 || score === 14){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '5 -6 -1');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 5 || score === 15){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-10 -0 2');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 6 || score === 16){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-10 -5 3');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 7 || score === 17){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-6 -5 -7');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 8 || score === 18){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-12 -5 -2');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 9 || score === 19){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-20 -5 -0');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the target is hit
                 if(score === 10 || score === 20){
+                    //changes it's position
                     document.querySelector('#target2').setAttribute('position', '-2 0 -2');
+                    //emit the hit to the server
                     socket.emit('pinkTallyScore', {pinkScore: score});
                 }
+                //if the score equals 21
                 if(score === 21){
-                    console.log("complete");
+                    //reset it
                     score = 0;
                 }
-                console.log(score);
             }
+            //recieve that the player won in the coop game
             socket.on('coopWin', (data) => {
-                console.log("Teamwork!");
-                alert("Great Teamwork! Play Again?");
-                window.location.reload()
-            });
-
-            socket.on('coopFailed', (data) => {
-                console.log("Nice Try");
-                alert("You didn't make it! Try Again?");
-                window.location.reload()
-            });
-
-            socket.on('timer' , (data) => {
-                console.log(data.time);
-                document.querySelector('#textTimer').setAttribute('text', 'value: ' + data.time);
-            });
-            
-            document.querySelector('#tealButton').querySelector('.button').addEventListener('click', function(){
-                document.querySelector('#player1').setAttribute('position', '19 2.810 34');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
-                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-                friendly = false;
-            });
-            document.querySelector('#pinkButton').querySelector('.button').addEventListener('click', function(){
-                document.querySelector('#player2').setAttribute('position', '-21.3 2.810 52');
-                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
-                document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-                friendly = false;
-            });
-            document.querySelector('#coopButton').querySelector('.button').addEventListener('click', function(){
-                document.querySelector('#player1').setAttribute('position', '2 0 -32');
+                //move the players to the coop mode victory room
+                document.querySelector('#player1').setAttribute('position', '-14 -25 0');
                 document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
                 document.querySelector('#player1').components['movement-controls'].updateNavLocation();
 
-                document.querySelector('#player2').setAttribute('position', '-2 0 -32');
+                document.querySelector('#player2').setAttribute('position', '-10 -25 0');
                 document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
                 document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-
-            });
-            document.querySelector('#startCoopGame').querySelector('.button').addEventListener('click', function(){
-                if(playerNum === 1){
-                    document.querySelector('#target1').setAttribute('position', '2 0 2');
-                    document.querySelector('#target1').setAttribute('visible', 'true');
-                    socket.emit('startTimer');
-
-                }
-                if(playerNum === 2){
-                    document.querySelector('#target2').setAttribute('position', '-2 0 -2');
-                    document.querySelector('#target2').setAttribute('visible', 'true');
-                    socket.emit('startTimer');
-                }
+                
+                //if the button in the middle of the room is pressed
+                document.querySelector('#coopWinRestart').querySelector('.button').addEventListener('click', function(){
+                    //reload the page
+                    window.location.reload()
+                });
             });
         </script>
     </body>

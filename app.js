@@ -6,142 +6,141 @@ const io        = require('socket.io')(server);
 
 const LISTEN_PORT   = 8080;
 
-//our routes
 app.get( '/', function( req, res ){ 
-    res.sendFile( __dirname + '/public/index.html' );
-});
-
-app.get( '/2D', function( req, res ){ 
-    res.sendFile( __dirname + '/public/2D.html' );
-});
-
-app.get( '/3D', function( req, res ){ 
     res.sendFile( __dirname + '/public/3D.html' );
 });
 
 //socket.io stuff
 //https://socket.io/docs/v3/emit-cheatsheet/
 
+//server side varibles
 let playerNum = 0;
 let coopTotal = 0;
-let timerStarted = false;
 
+//on player connection
 io.on('connection', (socket) => {
+    //print that a play has connected
     console.log( socket.id + " connected" );
 
+    //if the number of players is 0
     if(playerNum == 0){
+        //make the first player to join player one
         console.log( socket.id + " Is Player One" );
         socket.id = "playerOne";
         console.log(socket.id);
         playerNum = 1;
+
+        //locally emit the player number to the client
         io.local.emit("assign_playernum", {id:playerNum});
+        //locally emit the player number to the client for camera swap
         io.local.emit("swap_cam", {id:playerNum});
     }
+    //if there is already a player in the lobby and the connecting player is not player one
     else if(playerNum == 1 && socket.id !== "playerOne"){
+        //make the second player to join player two
         console.log( socket.id + " Is Player Two" );
         socket.id = "playerTwo";
         console.log(socket.id);
         playerNum = 2;
-        console.log("precam swap");
-        //sends player number
+
+        //locally emit the player number to the client
         io.local.emit("assign_playernum", {id:playerNum});
+        //locally emit the player number to the client for camera swap
         io.local.emit("swap_cam", {id:playerNum});
     }
 
-
+    //when recieved that players are shooting
     socket.on("shooting", (data) => {
+        //if the shooting player is player one
         if(socket.id === "playerOne"){
             console.log( "player one shooting" );
+            //emit to the clients that player one is shooting
             io.emit("player1_shooting", {id:socket.id});
         }
+        //if the shooting player is player two
         else if(socket.id === "playerTwo"){
             console.log( "player two shooting" );
+             //emit to the clients that player two is shooting
             io.emit("player2_shooting", {id:socket.id});
         }
     
     });
     
-
+    //if the player ID is connected to player one
     if(socket.id === "playerOne"){
+        //when player one data is received
         socket.on("player1Pos", (data) => {
-            //console.log( "Player One Present" );
+            //emit the data to all the clients
             io.emit("player1_update", {xPos:data.xPos, yPos:data.yPos, zPos:data.zPos, xRot:data.xRot, yRot:data.yRot, zRot:data.zRot});
         });
     }
+    //if the player ID is connected to player two
     else if(socket.id === "playerTwo"){
+        //when player two data is received
         socket.on("player2Pos", (data) => {
-            //console.log( "Player Two Present" );
+            //emit the data to all the clients
             io.emit("player2_update", {xPos:data.xPos, yPos:data.yPos, zPos:data.zPos, xRot:data.xRot, yRot:data.yRot, zRot:data.zRot});
         });
     }
-    
+    //on player disconnect
     socket.on('disconnect', () => {
+        //if the player is player one
         if(socket.id === "playerOne"){
             console.log( socket.id + " disconnected" );
+            //set the player number to zero (to prepare for when player one joins again)
             playerNum = 0;
+
         }
+        //if the player is player two
         else if(socket.id === "playerTwo"){
             console.log( socket.id + " disconnected" );
-            //if player 1 is not disconnected already, prepare for player 2 to join
-            //otherwise keep as 0 as we will need both players to join
+            //if player 1 is not disconnected, let player two disconnect so another player two can join
             if(playerNum != 0)
             {
                 playerNum = 1;
+
             }
         }
     });
-
+    //on teal being hit recieved
     socket.on("tealHit", (data) => {
         console.log( "player 1 hit" );
+        //emit pink_wins to check is pick wins or increase pink's hit count
         io.emit("pink_wins", {r:255, g:0, b:0});
     });
-
+    //on pink being hit recieved
     socket.on("pinkHit", (data) => {
         console.log( "player 2 hit" );
+        //emit teal_wins to check is pick wins or increase teal's hit count 
         io.emit("teal_wins", {r:255, g:0, b:0});
     });
 
-    socket.on("startTimer", (data) => {
-        if(timerStarted === false){
-            var timer = 10;
-            var timerCountdown = setInterval(function(){
-                console.log(timer);
-                io.sockets.emit('timer', {time:timer});
-                timer--
-                if (timer === -1) {
-                    io.sockets.emit('coopFailed');
-                    clearInterval(timerCountdown);
-                    timerStarted = false;
-                }
-            }, 1000);
-            timerStarted = true;
-        }
-    });
-
+    //on recieving tally the score from teal
     socket.on("tealTallyScore", (data) => {
+        //increase the team score
         coopTotal++;
-        console.log(data.tealScore);
         console.log("score is:" + coopTotal);
+        //if the score is 20
         if(coopTotal === 20){
-            console.log("Teal Team work!");
+            //emit coop win
             io.emit("coopWin");
+            //reset the score
             coopTotal = 0;
         }
     });
+    //on recieving tally the score from pink
     socket.on("pinkTallyScore", (data) => {
+        //increase the team score
         coopTotal++;
-        console.log(data.pinkScore);
         console.log("score is:" + coopTotal);
+        //if the score is 20
         if(coopTotal === 20){
-            console.log("Pink Team work!");
+            //emit coop win
             io.emit("coopWin");
+            //reset the score
             coopTotal = 0;
         }
     });
-
-    
-    //question 1: how do you continuously update the network, e.g., users position and orientation?
-    //question 2: how do you synch clients to current state?
 });
 
 app.use(express.static(__dirname + '/public')); //set root path of server ...

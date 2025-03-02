@@ -14,14 +14,14 @@
             //Start experience function
             AFRAME.registerComponent('start-experience',{
                 init:function(){
-                    console.log('sence loaded'); 
+                    console.log('scene loaded'); 
                     document.querySelector('#user-gesture-button').style.display='block';
                 }
             });
             //will be called when "enter experience" is clicked
             const startExperience = function(){
                 document.querySelector('#user-gesture-overlay').style.display='none';
-          
+                socket.emit('joinGame');
                 //start background music
                 let backgroundMusic = document.querySelector('#background-music');
                 backgroundMusic.components.sound.playSound();
@@ -55,16 +55,16 @@
            <a-entity id="background-music" sound="src:#backgroundMusic; autoplay:false; loop:true; rolloffFactor:0; volume:0.1"></a-entity>
 
            <!--Player One camera and cursor--> 
-           <a-entity id="player1" 
+           <a-entity id="player" 
                     movement-controls="speed: 0.4; constrainToNavMesh: true;" 
                     position="0 0 0">
                 <!--Player one camera-->
-                <a-entity   id="player1camera"
+                <a-entity   id="playercamera"
                             position="0 1.65 0" 
                             look-controls 
-                            camera="active: false">
+                            camera="active: true">
                     <!--Player one reticle-->
-                    <a-entity   id="player1cursor" 
+                    <a-entity   id="playercursor" 
                                 cursor="rayOrigin:xrselect" 
                                 raycaster="far:40; objects:.interactive" 
                                 position="0 0 -0.1"
@@ -109,25 +109,7 @@
                 </a-entity>
             </a-entity>
 
-            <!--Player two body-->
-            <a-entity id="player2" 
-                    movement-controls="speed: 0.4; constrainToNavMesh: true;" 
-                    position="0 0 0">
-                <!--Player two camera-->
-                <a-entity   id="player2camera" 
-                            camera="active: false"
-                            position="0 1.65 0" 
-                            look-controls>
-                    <!--Player two reticle-->
-                    <a-entity   id="player2cursor" 
-                                cursor="rayOrigin:xrselect" 
-                                raycaster="far:40; objects:.interactive" 
-                                position="0 0 -0.1"
-                                geometry="primitive: ring; radiusInner: 0.0004; radiusOuter: 0.001"
-                                material="color: white; shader: standard; emissive: rgb(255, 255, 255);">
-                    </a-entity>
-                </a-entity> 
-            </a-entity>
+            
             <!--Player two body-->
             <a-entity   id="HitBoxPlayer2" 
                         position="0 2.5 0">
@@ -382,7 +364,7 @@
                 //Assign a local ID to their computer
                 socket.on('assign_playernum', (data) => {
                     //If there are no players currently in the room
-                    if(playerNum == -1)
+                    if(playerNum === -1)
                     {
                         //give them the player 1 ID
                         playerNum = data.id;
@@ -392,27 +374,13 @@
                 socket.on('swap_cam', (data) => {
                     console.log('Swapping Cams');
                     //if they are player one
-                    if(playerNum === 1){
-                        //activiate the player one camera, disable player two camera and hide player two cursor
-                        document.querySelector('#player2camera').setAttribute('camera', 'active', false);
-                        document.querySelector('#player1camera').setAttribute('camera', 'active', true);
-                        document.querySelector('#player2cursor').setAttribute('visible','false');
-                        console.log('cam1enabled');
-                    }
-                    //if they are player two
-                    else if(playerNum === 2){
-                        //activiate the player two camera, disable player one camera and hide player one cursor
-                        document.querySelector('#player1camera').setAttribute('camera', 'active', false);
-                        document.querySelector('#player2camera').setAttribute('camera', 'active', true);
-                        document.querySelector('#player1cursor').setAttribute('visible','false');
-                        console.log('cam2enabled');
-                    };
+                    
                 });
 
                 //If player 1s head hit box is clicked
                 document.querySelector('#headBox1').addEventListener('click', function(){
                     //if friendly is false
-                    if(friendly === false){
+                    if(friendly === false && playerNum === 2){
                         //emit a hit to server
                         socket.emit('tealHit');
                     }
@@ -420,7 +388,7 @@
                 //If player 1s body hit box is clicked
                 document.querySelector('#bodyBox1').addEventListener('click', function(){
                     //if friendly is false
-                    if(friendly === false){
+                    if(friendly === false && playerNum === 2){
                         //emit a hit to server
                         socket.emit('tealHit');
                     }
@@ -428,7 +396,7 @@
                 //If player 2s head hit box is clicked
                 document.querySelector('#headBox2').addEventListener('click', function(){
                     //if friendly is false
-                    if(friendly === false){
+                    if(friendly === false && playerNum === 1){
                         //emit a hit to server   
                         socket.emit('pinkHit'); 
                     }
@@ -436,7 +404,7 @@
                 //If player 2s body hit box is clicked
                 document.querySelector('#bodyBox2').addEventListener('click', function(){
                     //if friendly is false
-                    if(friendly === false){
+                    if(friendly === false && playerNum === 1){
                         //emit a hit to server   
                         socket.emit('pinkHit');
                     }
@@ -451,37 +419,49 @@
             //if the teal button is pressed
             document.querySelector('#tealButton').querySelector('.button').addEventListener('click', function(){
                 //teleport teal to their side of the arena
-                document.querySelector('#player1').setAttribute('position', '19 2.810 34');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                if (playerNum === 1)
+                {
+                document.querySelector('#player').setAttribute('position', '19 2.810 34');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
                 //make friendly false
                 friendly = false;
+                }
             });
             //if the pink button is pressed
             document.querySelector('#pinkButton').querySelector('.button').addEventListener('click', function(){
                 //teleport pink to their side of the arena
-                document.querySelector('#player2').setAttribute('position', '-21.3 2.810 52');
-                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                console.log(playerNum);
+                if (playerNum === 2)
+                {
+                document.querySelector('#player').setAttribute('position', '-21.3 2.810 52');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
                 //make friendly false
                 friendly = false;
+                }
             });
             //if the coop button is pressed
             document.querySelector('#coopButton').querySelector('.button').addEventListener('click', function(){
+
+                if (playerNum === 1)
+                {
                 //teleport player 1 to the coop arena
-                document.querySelector('#player1').setAttribute('position', '2 0 -32');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#player').setAttribute('position', '2 0 -32');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
+                else if (playerNum === 2)
+                {
                 //teleport player 2 to the coop arena
-                document.querySelector('#player2').setAttribute('position', '-2 0 -32');
-                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#player').setAttribute('position', '-2 0 -32');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
             });
             //if the start coop button is pressed
             document.querySelector('#startCoopGame').querySelector('.button').addEventListener('click', function(){
@@ -525,28 +505,31 @@
                 //Every rendered frame
                 tick: function () {
                     //Get the position and rotation of player one
-                    let xPosPlayer1 = document.querySelector("#player1").getAttribute('position').x ;
-                    let yPosPlayer1 = document.querySelector("#player1").getAttribute('position').y + 1.6;
-                    let zPosPlayer1 = document.querySelector("#player1").getAttribute('position').z;
+                    
+                    let xPosPlayer1 = document.querySelector("#player").getAttribute('position').x ;
+                    let yPosPlayer1 = document.querySelector("#player").getAttribute('position').y + 1.6;
+                    let zPosPlayer1 = document.querySelector("#player").getAttribute('position').z;
 
-                    let xRotPlayer1 = document.querySelector("#player1camera").getAttribute('rotation').x;
-                    let yRotPlayer1 = document.querySelector("#player1camera").getAttribute('rotation').y;
-                    let zRotPlayer1 = document.querySelector("#player1camera").getAttribute('rotation').z;
-
+                    let xRotPlayer1 = document.querySelector("#playercamera").getAttribute('rotation').x;
+                    let yRotPlayer1 = document.querySelector("#playercamera").getAttribute('rotation').y;
+                    let zRotPlayer1 = document.querySelector("#playercamera").getAttribute('rotation').z;
+                    
                     //emit player two data to the server
                     socket.emit('player1Pos', {xPos:xPosPlayer1, yPos:yPosPlayer1, zPos:zPosPlayer1, xRot:xRotPlayer1, yRot:yRotPlayer1, zRot:zRotPlayer1});
-
-                    //Get the position and rotation of player two
-                    let xPosPlayer2 = document.querySelector("#player2").getAttribute('position').x;
-                    let yPosPlayer2 = document.querySelector("#player2").getAttribute('position').y + 1.6;
-                    let zPosPlayer2 = document.querySelector("#player2").getAttribute('position').z;
-
-                    let xRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').x;
-                    let yRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').y;
-                    let zRotPlayer2 = document.querySelector("#player2camera").getAttribute('rotation').z;
                     
-                    //emit player one data to the server
+                    
+                    //Get the position and rotation of player two
+                    let xPosPlayer2 = document.querySelector("#player").getAttribute('position').x;
+                    let yPosPlayer2 = document.querySelector("#player").getAttribute('position').y + 1.6;
+                    let zPosPlayer2 = document.querySelector("#player").getAttribute('position').z;
+
+                    let xRotPlayer2 = document.querySelector("#playercamera").getAttribute('rotation').x;
+                    let yRotPlayer2 = document.querySelector("#playercamera").getAttribute('rotation').y;
+                    let zRotPlayer2 = document.querySelector("#playercamera").getAttribute('rotation').z;
+                    
+                    //emit player two data to the server
                     socket.emit('player2Pos', {xPos:xPosPlayer2, yPos:yPosPlayer2, zPos:zPosPlayer2, xRot:xRotPlayer2, yRot:yRotPlayer2, zRot:zRotPlayer2});
+                    
                 }
             });
 
@@ -556,7 +539,6 @@
                 //put position and rotation values together
                 let player1Position = data.xPos + ' ' + data.yPos + ' ' + data.zPos;
                 let player1Rotation = data.xRot + ' ' + data.yRot + ' ' + data.zRot;
-
                 //Change the position and rotation
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', player1Position);
                 document.querySelector('#HitBoxPlayer1').setAttribute('rotation', player1Rotation);
@@ -568,7 +550,6 @@
                 //put position and rotation values together
                 let player2Position = data.xPos + ' ' + data.yPos + ' ' + data.zPos;
                 let player2Rotation = data.xRot + ' ' + data.yRot + ' ' + data.zRot;
-                
                 //Change the position and rotation from the server
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', player2Position);
                 document.querySelector('#HitBoxPlayer2').setAttribute('rotation', player2Rotation);
@@ -583,15 +564,23 @@
                     victorySound.play();
                     setTimeout(() => document.querySelector('#pinkHitConfirm').setAttribute('visible', 'false'), 1000);
                     //move the player positions to the "teal wins room"
-                    document.querySelector('#player1').setAttribute('position', '14 -25 0');
-                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
-                    document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
+                    if(playerNum === 1)
+                    {
+                        document.querySelector('#player').setAttribute('position', '14 -25 0');
+                        document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
+                        document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                        document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
+                    else if (playerNum === 2)
+                    {
+                        document.querySelector('#player').setAttribute('position', '10 -25 0');
+                        document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
+                        document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                        document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
+                    
 
-                    document.querySelector('#player2').setAttribute('position', '10 -25 0');
-                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
-                    document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                    
                     //set friendly back to true
                     friendly = true;
                     //makes teals hits 0
@@ -609,17 +598,21 @@
                     victorySound.play();
                     setTimeout(() => document.querySelector('#pinkHitConfirm').setAttribute('visible', 'false'), 1000);
 
+                    if (playerNum === 1)
+                    {
                      //move the player back to starting positions"
-                    document.querySelector('#player1').setAttribute('position', '19 2.810 34');
-                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#player').setAttribute('position', '19 2.810 34');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-
-                    document.querySelector('#player2').setAttribute('position', '-21.3 2.810 52');
-                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
+                    else if (playerNum === 2)
+                    {
+                    document.querySelector('#player').setAttribute('position', '-21.3 2.810 52');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
                     //increase teals total hits
                     tealHits++;
                 }
@@ -632,15 +625,20 @@
                     victorySound.play();
                     setTimeout(() => document.querySelector('#tealHitConfirm').setAttribute('visible', 'false'), 1000);
                     //move the player positions to the "pink wins room"
-                    document.querySelector('#player1').setAttribute('position', '37 -25 0');
-                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                    if (playerNum === 1)
+                    {
+                    document.querySelector('#player').setAttribute('position', '37 -25 0');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-
-                    document.querySelector('#player2').setAttribute('position', '33 -25 0');
-                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
+                    else if(playerNum === 2)
+                    {
+                    document.querySelector('#player').setAttribute('position', '33 -25 0');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
                     //set friendly back to true
                     friendly = true;
                     //reset pinks hits
@@ -658,16 +656,20 @@
                     victorySound.play();
                     setTimeout(() => document.querySelector('#tealHitConfirm').setAttribute('visible', 'false'), 1000);
                     //move the players back to their starting positions
-                    document.querySelector('#player1').setAttribute('position', '19 2.810 34');
-                    document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                    if (playerNum === 1)
+                    {
+                    document.querySelector('#player').setAttribute('position', '19 2.810 34');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-
-                    document.querySelector('#player2').setAttribute('position', '-21.3 2.810 52');
-                    document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
+                    else if (playerNum === 2)
+                    {
+                    document.querySelector('#player').setAttribute('position', '-21.3 2.810 52');
+                    document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                     document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                    document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-
+                    document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                    }
                     //increase pinks total hits
                     pinkHits++;
                 }
@@ -836,21 +838,44 @@
             //recieve that the player won in the coop game
             socket.on('coopWin', (data) => {
                 //move the players to the coop mode victory room
-                document.querySelector('#player1').setAttribute('position', '-14 -25 0');
-                document.querySelector('#player1camera').setAttribute('position', '0 1.65 0');
+                if (playerNum === 1)
+                {
+                document.querySelector('#player').setAttribute('position', '-14 -25 0');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player1').components['movement-controls'].updateNavLocation();
-
-                document.querySelector('#player2').setAttribute('position', '-10 -25 0');
-                document.querySelector('#player2camera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
+                else if (playerNum === 2)
+                {
+                document.querySelector('#player').setAttribute('position', '-10 -25 0');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
                 document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
-                document.querySelector('#player2').components['movement-controls'].updateNavLocation();
-                
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
                 //if the button in the middle of the room is pressed
                 document.querySelector('#coopWinRestart').querySelector('.button').addEventListener('click', function(){
                     //reload the page
-                    window.location.reload()
+                    window.location.reload();
                 });
+            });
+            socket.on('resetScores', (data) => {
+                tealHits = 0;
+                pinkHits = 0;
+                console.log(playerNum);
+                if (playerNum === 1)
+                {
+                document.querySelector('#player').setAttribute('position', '0 0 0');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer1').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
+                if (playerNum === 2)
+                {
+                document.querySelector('#player').setAttribute('position', '0 0 0');
+                document.querySelector('#playercamera').setAttribute('position', '0 1.65 0');
+                document.querySelector('#HitBoxPlayer2').setAttribute('position', '0 2.5 0');
+                document.querySelector('#player').components['movement-controls'].updateNavLocation();
+                }
             });
         </script>
     </body>

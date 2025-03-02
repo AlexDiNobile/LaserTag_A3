@@ -1,7 +1,7 @@
 {
   "name": "2_websockets",
   "version": "1.0.0",
-  "description": "",
+  "description": "-------CONTROLS\r \tMouse and Keyboard\r \t- Use WASD to move\r \t- Click, hold and drag to move the camera\r \t- Click and release to shoot",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,5 +11,14 @@
   "dependencies": {
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexDiNobile/LaserTag_A3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexDiNobile/LaserTag_A3/issues"
+  },
+  "homepage": "https://github.com/AlexDiNobile/LaserTag_A3#readme"
 }
